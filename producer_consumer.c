@@ -11,7 +11,6 @@ int buffer[BUFFER_SIZE];
 int buffer_index = 0;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 int producer_finished = 0;
-int consumers_finished = 0;
 
 void *producer(void *arg) {
     FILE *all_file = fopen("all.txt", "w");
@@ -38,7 +37,7 @@ void *producer(void *arg) {
 
 void *customer(void *arg) {
     int parity = *((int *)arg);
-    char filename[20];
+    char filename[10];
 
     sprintf(filename, "%s.txt", parity ? "odd" : "even");
     FILE *file = fopen(filename, "w");
@@ -64,19 +63,18 @@ void *customer(void *arg) {
     }
 
     fclose(file);
-    consumers_finished++;
 }
 
 
 
 int main() {
     pthread_t prod_tid, cust1_tid, cust2_tid;
-    int cust1_parity = 0;
-    int cust2_parity = 1;
+    int cust_odd_parity = 0;
+    int cust_even_parity = 1;
 
     pthread_create(&prod_tid, NULL, producer, NULL);
-    pthread_create(&cust1_tid, NULL, customer, &cust1_parity);
-    pthread_create(&cust2_tid, NULL, customer, &cust2_parity);
+    pthread_create(&cust1_tid, NULL, customer, &cust_odd_parity);
+    pthread_create(&cust2_tid, NULL, customer, &cust_even_parity);
 
     pthread_join(prod_tid, NULL);
     pthread_join(cust1_tid, NULL);
