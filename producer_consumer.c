@@ -13,7 +13,7 @@ pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 int producer_finished = 0;
 
 void *producer(void *arg) {
-    FILE *all_file = fopen("all.txt", "w");
+    FILE *file = fopen("all.txt", "w");
     for (int i = 0; i < MAX_COUNT; i++) {
         int number = rand() % (UPPER_NUM - LOWER_NUM + 1) + LOWER_NUM;
         while(buffer_index >= BUFFER_SIZE);
@@ -22,14 +22,14 @@ void *producer(void *arg) {
 
         buffer[buffer_index++] = number;
 
-        if (all_file != NULL) {
-            fprintf(all_file, "%d\n", number);  
+        if (file != NULL) {
+            fprintf(file, "%d\n", number);  
         }
         
         pthread_mutex_unlock(&lock);
     }
 
-    fclose(all_file);
+    fclose(file);
     producer_finished = 1;
 }
 
