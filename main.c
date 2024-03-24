@@ -69,8 +69,8 @@ void *customer(void *arg) {
 
 int main() {
     pthread_t prod_tid, cust1_tid, cust2_tid;
-    int cust_odd_parity = 0;
-    int cust_even_parity = 1;
+    int cust_even_parity = 0;
+    int cust_odd_parity = 1;
 
     pthread_create(&prod_tid, NULL, producer, NULL);
     pthread_create(&cust1_tid, NULL, customer, &cust_odd_parity);
